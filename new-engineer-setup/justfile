@@ -1,0 +1,94 @@
+# Claude Code New Engineer Setup
+# Fast onboarding with deterministic + agentic modes
+
+# ─── Initialization ────────────────────────────────────────────────
+
+# Deterministic init (hook only, no LLM, CI-friendly)
+cldi:
+    claude --init
+
+# Agentic init (hook + agent analysis + reporting)
+cldii:
+    claude --init /install
+
+# Interactive init (hook + agent + user questions)
+cldit:
+    claude --init /install true
+
+# ─── Maintenance ───────────────────────────────────────────────────
+
+# Deterministic maintenance (hook only)
+cldm:
+    claude --init --context maintenance
+
+# Agentic maintenance (hook + agent + reporting)
+cldmm:
+    claude --init /maintenance
+
+# ─── Common Commands ──────────────────────────────────────────────
+
+# List all available tools
+tools:
+    claude /all-tools
+
+# Ask a question about the project (read-only)
+question q:
+    claude /question "{{q}}"
+
+# Create a new custom slash command
+metaprompt desc:
+    claude /t-metaprompt-workflow "{{desc}}"
+
+# Generate biweekly report (default 7 day lookback)
+biweekly days="7":
+    claude /biweekly {{days}}
+
+# Semantic commit with optional PR creation
+commit pr="true" issue="":
+    claude /semantic-commit {{pr}} {{issue}}
+
+# Load AI documentation into local markdown
+load-docs:
+    claude /load-ai-docs
+
+# Spawn orchestrator instance for a project
+spawn project="" instance="1":
+    claude /spawn-project {{project}} {{instance}}
+
+# Onboard assessment candidate
+onboard first repo github email deadline:
+    claude /onboard-candidate {{first}} {{repo}} {{github}} {{email}} {{deadline}}
+
+# Review candidate assessment
+review name:
+    claude /review-candidate {{name}}
+
+# Test damage control guards
+sentient:
+    claude /sentient
+
+# Reverse goal setting exercise
+goals goal:
+    claude /reverse-goal-setting "{{goal}}"
+
+# ─── Utilities ─────────────────────────────────────────────────────
+
+# Show all available just commands
+help:
+    @just --list
+
+# Reset artifacts for retesting setup
+reset:
+    rm -rf logs/ .claude/data/sessions/
+    @echo "Cleaned up logs and session data"
+
+# Check if all dependencies are available
+check:
+    @echo "Checking dependencies..."
+    @which claude > /dev/null 2>&1 && echo "  claude: OK" || echo "  claude: MISSING"
+    @which uv > /dev/null 2>&1 && echo "  uv: OK" || echo "  uv: MISSING"
+    @which gh > /dev/null 2>&1 && echo "  gh: OK" || echo "  gh: MISSING"
+    @which git > /dev/null 2>&1 && echo "  git: OK" || echo "  git: MISSING"
+    @which just > /dev/null 2>&1 && echo "  just: OK" || echo "  just: MISSING"
+    @which ruff > /dev/null 2>&1 && echo "  ruff: OK" || echo "  ruff: MISSING (optional)"
+    @echo "Done."
