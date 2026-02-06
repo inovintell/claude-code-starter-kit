@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Claude Code runtime data
+.claude/data/
+.claude/local/
+
+# AI docs (fetched, not committed)
+ai_docs/*.md
+!ai_docs/README.md
+
+# OS
+.DS_Store
+Thumbs.db

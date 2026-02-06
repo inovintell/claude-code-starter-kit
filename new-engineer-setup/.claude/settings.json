@@ -1,0 +1,98 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "uv run $CLAUDE_PROJECT_DIR/.claude/status_lines/status_line.py",
+    "padding": 0
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/validators/bash_validator.py",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/validators/ruff_validator.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/validators/ruff_validator.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/validators/validate_new_file.py -d . -e .py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/session_start.py"
+          }
+        ]
+      }
+    ],
+    "Setup": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/setup_init.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run $CLAUDE_PROJECT_DIR/.claude/hooks/user_prompt_submit.py --log-only --store-last-prompt"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf /*:*)",
+      "Bash(rm -rf ~/*:*)",
+      "Bash(sudo rm -rf:*)",
+      "Bash(mkfs:*)",
+      "Bash(dd if=* of=/dev/*:*)"
+    ],
+    "ask": [
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
+    ]
+  }
+}

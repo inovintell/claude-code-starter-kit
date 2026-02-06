@@ -1,0 +1,93 @@
+# Project Commands
+# ADW workflow + setup + utilities
+
+# ─── Setup ─────────────────────────────────────────────────────────
+
+# Deterministic init (hook only, no LLM, CI-friendly)
+cldi:
+    claude --init
+
+# Agentic setup (hook + agent analysis + validation)
+cldii:
+    claude --init /setup
+
+# Interactive setup (hook + agent + user questions for env config)
+cldit:
+    claude --init /setup true
+
+# ─── ADW Workflow ──────────────────────────────────────────────────
+
+# Create implementation plan -> specs/
+plan prompt:
+    claude /plan "{{prompt}}"
+
+# Build from plan
+build plan:
+    claude /build {{plan}}
+
+# Review completed work -> app_review/
+review prompt plan="":
+    claude /review "{{prompt}}" {{plan}}
+
+# Fix issues from review -> app_fix_reports/
+fix prompt plan review:
+    claude /fix "{{prompt}}" {{plan}} {{review}}
+
+# Full cycle: plan -> build -> review (manual, sequential)
+cycle prompt:
+    @echo "Step 1: Creating plan..."
+    claude /plan "{{prompt}}"
+    @echo ""
+    @echo "Plan created in specs/. Review it, then run:"
+    @echo "  just build specs/<plan-file>.md"
+
+# ─── Common Commands ──────────────────────────────────────────────
+
+# Ask a question about the project (read-only)
+question q:
+    claude /question "{{q}}"
+
+# Create a new custom slash command
+metaprompt desc:
+    claude /meta-prompt "{{desc}}"
+
+# Load AI documentation into local markdown
+load-docs:
+    claude /load-ai-docs
+
+# List all available tools
+tools:
+    claude /all-tools
+
+# ─── Utilities ─────────────────────────────────────────────────────
+
+# Show all available just commands
+help:
+    @just --list
+
+# Check if all dependencies are available
+check:
+    @echo "Checking dependencies..."
+    @which claude > /dev/null 2>&1 && echo "  claude: OK" || echo "  claude: MISSING"
+    @which uv > /dev/null 2>&1 && echo "  uv: OK" || echo "  uv: MISSING"
+    @which gh > /dev/null 2>&1 && echo "  gh: OK" || echo "  gh: MISSING"
+    @which git > /dev/null 2>&1 && echo "  git: OK" || echo "  git: MISSING"
+    @which just > /dev/null 2>&1 && echo "  just: OK" || echo "  just: MISSING"
+    @which ruff > /dev/null 2>&1 && echo "  ruff: OK" || echo "  ruff: MISSING (optional)"
+    @echo "Done."
+
+# Reset logs and session data
+reset:
+    rm -rf logs/ .claude/data/sessions/
+    @echo "Cleaned up logs and session data"
+
+# Show project structure
+tree:
+    @echo "apps/              Application code"
+    @echo "ai_docs/           Fetched documentation cache"
+    @echo "specs/             Implementation plans (/plan output)"
+    @echo "app_review/        Code review reports (/review output)"
+    @echo "app_fix_reports/   Fix reports (/fix output)"
+    @echo "scripts/           Utility scripts"
+    @echo "tests/             Test files"
+    @echo "logs/              Runtime logs (gitignored)"

@@ -1,0 +1,22 @@
+# Auto detect text files and normalize line endings
+* text=auto
+
+# Python
+*.py text diff=python
+*.pyi text diff=python
+
+# Markdown
+*.md text diff=markdown
+
+# JSON/YAML
+*.json text
+*.yaml text
+*.yml text
+*.toml text
+
+# Shell
+*.sh text eol=lf
+
+# Deny large binary files
+*.zip binary
+*.tar.gz binary

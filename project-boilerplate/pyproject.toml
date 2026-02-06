@@ -1,0 +1,26 @@
+[project]
+name = "my-project"
+version = "0.1.0"
+description = "Project description"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "python-dotenv>=1.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.8",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
