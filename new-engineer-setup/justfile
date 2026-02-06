@@ -37,7 +37,7 @@ question q:
 
 # Create a new custom slash command
 metaprompt desc:
-    claude /t-metaprompt-workflow "{{desc}}"
+    claude /meta-prompt "{{desc}}"
 
 # Generate biweekly report (default 7 day lookback)
 biweekly days="7":

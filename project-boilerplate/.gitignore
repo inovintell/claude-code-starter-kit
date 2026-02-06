@@ -17,10 +17,15 @@ build/
 
 # Logs
 logs/
+*.log
 
-# Claude Code
+# Claude Code runtime data
 .claude/data/
 .claude/local/
+
+# AI docs (fetched, not committed)
+ai_docs/*.md
+!ai_docs/README.md
 
 # OS
 .DS_Store

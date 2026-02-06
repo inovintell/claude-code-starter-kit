@@ -6,16 +6,46 @@ Two ready-to-use templates for Claude Code projects.
 
 Copy this into any new project to get a working Claude Code setup instantly.
 
-**What's included:**
+**Directory layout:**
 
-- `CLAUDE.md` — Engineering rules (no mocking, pydantic over dicts, UV only, ephemeral tests)
-- `.claude/settings.json` — Status line, PreToolUse/PostToolUse hooks, permission deny/ask lists
-- `.claude/hooks/` — Damage control (`pre_tool_use.py`), logging (`post_tool_use.py`), prompt tracking (`user_prompt_submit.py`)
-- `.claude/status_lines/` — Two status line scripts (basic v1 + advanced v4 with agent name/prompts/extras)
-- `.claude/output-styles/` — 11 output styles (ultra-concise, bullet-points, genui, html-structured, markdown, observable-tools-diffs, table-based, tts-summary, yaml-structured)
-- `.claude/commands/question.md` — Read-only project Q&A command
-- `pyproject.toml` — UV-based Python project with pydantic, rich, python-dotenv
-- `.gitignore` — Python, env files, logs, IDE, Claude Code runtime data
+```
+project-boilerplate/
+├── CLAUDE.md                          # Engineering rules
+├── .mcp.json                          # MCP server defaults (playwright)
+├── pyproject.toml                     # UV-based Python project
+├── env.sample.txt                     # Environment variable template
+├── .gitignore                         # Python, logs, env, IDE, Claude runtime
+├── .gitattributes                     # Line endings, diff drivers
+├── apps/                              # Application code
+├── ai_docs/                           # Fetched documentation cache
+│   └── README.md                      # URL list for /load-ai-docs
+├── specs/                             # Implementation plans (/plan output)
+├── app_review/                        # Code review reports (/review output)
+├── app_fix_reports/                   # Fix reports (/fix output)
+├── scripts/                           # Utility scripts
+├── tests/                             # Test files
+├── logs/                              # Runtime logs (gitignored)
+└── .claude/
+    ├── settings.json                  # Status line, hooks, permissions
+    ├── hooks/
+    │   ├── pre_tool_use.py            # Damage control
+    │   ├── post_tool_use.py           # Logging
+    │   └── user_prompt_submit.py      # Prompt tracking
+    ├── commands/
+    │   ├── plan.md                    # Create implementation plan -> specs/
+    │   ├── build.md                   # Implement plan top-to-bottom
+    │   ├── review.md                  # Risk-tiered code review -> app_review/
+    │   ├── fix.md                     # Fix review issues -> app_fix_reports/
+    │   ├── question.md                # Read-only project Q&A
+    │   ├── load-ai-docs.md            # Fetch docs from URLs -> ai_docs/
+    │   └── meta-prompt.md             # Create new slash commands
+    ├── agents/
+    │   └── docs-scraper.md            # URL -> markdown scraping agent
+    ├── output-styles/                 # 11 output formatting styles
+    └── status_lines/                  # Status line scripts (v1 + v4)
+```
+
+**ADW workflow:** `/plan` -> `/build` -> `/review` -> `/fix`
 
 **Usage:**
 
@@ -47,6 +77,7 @@ Onboarding toolkit for new engineers. Combines deterministic hooks with agentic 
 | `/install` | Deterministic setup verification |
 | `/load-ai-docs` | Fetch documentation URLs into local markdown |
 | `/maintenance` | Dependency updates and health checks |
+| `/meta-prompt` | Meta-prompt that creates new slash commands |
 | `/onboard-candidate` | Create assessment repo + collaborator + HTML email |
 | `/question` | Read-only project Q&A |
 | `/reverse-goal-setting` | Skill-first goal setting framework |
@@ -54,7 +85,6 @@ Onboarding toolkit for new engineers. Combines deterministic hooks with agentic 
 | `/semantic-commit` | Group changes semantically, create issue/branch/PR |
 | `/sentient` | Test damage control guards |
 | `/spawn-project` | Deterministic port allocation for orchestrator instances |
-| `/t-metaprompt-workflow` | Meta-prompt that creates new slash commands |
 
 **Justfile recipes:**
 
@@ -66,6 +96,7 @@ just cldii         # Agentic init (hook + analysis)
 just cldit         # Interactive init (hook + agent + questions)
 just tools         # /all-tools
 just question "?"  # /question
+just metaprompt    # /meta-prompt
 just commit        # /semantic-commit
 just biweekly      # /biweekly
 just load-docs     # /load-ai-docs
